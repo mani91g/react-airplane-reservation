@@ -32,26 +32,27 @@ export default class TaskViewContainer extends React.Component<IProps, ILocalSta
             [name]: value})
     }
 
-    validateInput() {
+    isValidateInput = () => {
         let { inputSeat } = this.state
         let seatFormat:number[][] = []
         var array = inputSeat.split(',');
-        let inputErrorMessage = 'Please provide comma, separated numbers of even length for plane seating plan'
 
         if(array.length%2 != 0)
-            window.alert(inputErrorMessage)
+            return false
         else{
             array.map((_,i) => {
                 if(i%2==0){
                     try{
                         seatFormat.push([parseInt(array[i]), parseInt(array[i+1])])
                     }catch(err){
-                        window.alert(inputErrorMessage)
+                        return false
                     }
                 }                    
-            this.setState({seatFormat})
-                
+                         
             })
+
+            this.setState({seatFormat})
+            return true
         }
         
     }
@@ -82,7 +83,9 @@ export default class TaskViewContainer extends React.Component<IProps, ILocalSta
     allotSeats = async ()  => {
         
         let passengerCount = 0
-        this.validateInput()
+        if(!this.isValidateInput()){
+            window.alert('Please provide comma, separated numbers of even length for plane seating plan')
+        }
         //Reset seats
         let seats = await this.formSeats()
         this.setState({seats})
@@ -264,10 +267,16 @@ export default class TaskViewContainer extends React.Component<IProps, ILocalSta
         return passengerCount
     }
 
+    componentDidUpdate = async (prevProps, prevState) => {
+        //Check if seating arrangement has changed
+        if(this.state.inputSeat !== prevState.inputSeat){
+            this.isValidateInput()
+        }
+    }
+
     getColor = (i, j, k): string => {
         const { seats } = this.state
         let iMax = seats.length
-        let jMax = seats[i] && seats[i].length
         let kMax = seats[i][j] && seats[i][j].length
         
         //Check seat position

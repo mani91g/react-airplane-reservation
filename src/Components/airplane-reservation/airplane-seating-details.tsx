@@ -1,7 +1,7 @@
 const AirplaneDetails = (props: IProps) => {
     const { seats } = props
     return (
-        <div style={{ display: "flex", marginTop: "50px", "marginLeft":"20px" }} >
+        <div style={{ display: "flex", marginTop: "50px", "marginLeft":"20px", "marginBottom":"20px" }} >
             {seats.map((x, i) => {
                 return <div style={{ marginRight: "50px" }}>{
                     x.map((y, j) => { 
