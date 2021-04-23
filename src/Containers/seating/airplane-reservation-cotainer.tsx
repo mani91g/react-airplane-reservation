@@ -39,21 +39,24 @@ export default class TaskViewContainer extends React.Component<IProps, ILocalSta
         var array = inputSeat.split(',');
 
         if(array.length%2 != 0)
-            return false
+            return []
         else{
-            array.map((_,i) => {
-                if(i%2==0){
-                    try{
-                        seatFormat.push([parseInt(array[i]), parseInt(array[i+1])])
-                    }catch(err){
-                        return false
-                    }
-                }                    
-                         
-            })
+            for(let i = 0; i < array.length; i = i+2){
+                try{
+                    let num1 = parseInt(array[i])
+                    let num2 = parseInt(array[i+1])
 
-            this.setState({seatFormat})
-            return true
+                    if(isNaN(num1) || isNaN(num2))
+                        return []
+                    
+                    seatFormat.push([num1, num2])
+
+                }catch(err){
+                    return []
+                }
+            }
+
+            return seatFormat
         }
         
     }
@@ -78,23 +81,25 @@ export default class TaskViewContainer extends React.Component<IProps, ILocalSta
     }
 
     allotSeats = async ()  => {
-        let { seatFormat, totalPassengers } = this.state
+        let { totalPassengers } = this.state
+        let seatFormat = this.isValidateInput()
 
-        if(!this.isValidateInput()){
-            window.alert('Please provide comma, separated numbers of even length for plane seating plan')
+        if(seatFormat && seatFormat.length > 1){
+            //Fill seats
+            let seats = fillSeats(seatFormat, totalPassengers)
+            this.setState({seats})
         }
-        //Fill seats
-        let seats = fillSeats(seatFormat, totalPassengers)
-        this.setState({seats})
+        else
+            window.alert('Please provide comma, separated numbers of even length for plane seating plan')
 
     }
 
 
     componentDidUpdate = async (prevProps, prevState) => {
         //Check if seating arrangement has changed
-        if(this.state.inputSeat !== prevState.inputSeat){
-            this.isValidateInput()
-        }
+        // if(this.state.inputSeat !== prevState.inputSeat){
+        //     this.isValidateInput()
+        // }
     }
 
     getColor = (i, j, k): string => {
