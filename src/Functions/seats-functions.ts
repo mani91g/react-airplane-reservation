@@ -46,12 +46,11 @@ const fillAisleSeats = (passengerCount: number, seats: number[][][], totalPassen
         }
         
         
-        if(k == 0) //if left aisle then move to right aisle
-            k = kMax -1
-        else if(k == kMax -1){ //if right aisle is filled move to next aisle
+        if(k == kMax -1){ //if right aisle is filled move to next aisle
             i = i + 1;
             k = 0;
-        }
+        }else if(k == 0) //if left aisle then move to right aisle
+            k = kMax -1
         if(i>iMax-1 && j!=jMax-1){ // Move one row back if end of right most but not is last section
             i = 0;
             j++;
@@ -86,15 +85,8 @@ const fillWindowSeats = (passengerCount: number, seats: number[][][], totalPasse
             i++
             continue
         }
-
-        kMax = seats[i][j].length
-
-        if(i == 0 && k == 0){
-            seats[i][j][k] = ++passengerCount
-            k = kMax-1
-            i = iMax-1
-        }
-        else if(i == iMax-1 && k == kMax-1){
+        
+        if(i == iMax-1 && k == kMax-1){
             seats[i][j][k] = ++passengerCount
 
             if(j == jMax-1)
@@ -104,6 +96,11 @@ const fillWindowSeats = (passengerCount: number, seats: number[][][], totalPasse
             ++j
             i = seats[0] && seats[0][j] ? 0 : iMax-1                 
             k = i == 0 ? 0 : seats[i][j].length-1
+        }else if(i == 0 && k == 0){
+            seats[i][j][k] = ++passengerCount            
+            i = iMax-1
+            kMax = seats[i][j].length
+            k = kMax - 1
         }
         else
             i = iMax -1

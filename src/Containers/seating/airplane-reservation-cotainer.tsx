@@ -84,7 +84,7 @@ export default class TaskViewContainer extends React.Component<IProps, ILocalSta
         let { totalPassengers } = this.state
         let seatFormat = this.isValidateInput()
 
-        if(seatFormat && seatFormat.length > 1){
+        if(seatFormat && seatFormat.length > 0){
             //Fill seats
             let seats = fillSeats(seatFormat, totalPassengers)
             this.setState({seats})
